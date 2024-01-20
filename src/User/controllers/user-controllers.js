@@ -6,7 +6,8 @@ const upload = multer({storage:storage})
 
 async function registerUser(req,res){
     const user = new User(req.body)
-    user.profilePic = req.file.buffer
+    if(req.file)
+    {user.profilePic = req.file.buffer}
     try {
         await user.save()
         const token = await user.GenerateToken()

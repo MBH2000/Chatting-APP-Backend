@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true,
         unique:true,
+        trim : true,
         validate(value){
             if(!validator.isEmail(value)){
                 throw new Error('email is envalide')
@@ -30,6 +31,10 @@ const UserSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
+    },
+    friends:{
+        type:Array,
+        default:[]
     },
     token:{
         type:String,

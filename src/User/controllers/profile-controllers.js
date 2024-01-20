@@ -1,5 +1,5 @@
-import User from "../models/user-model.js";
-import multer from "multer";
+import multer from 'multer';
+import User from "../models/user-model.js"
 
 const storage = multer.memoryStorage()
 const upload = multer({storage:storage})
@@ -26,9 +26,25 @@ async function editeUser(req,res){
     }
 }
 
+async function profile(req,res){
+    res.send(req.user)
+}
+
+async function getFriends(req,res){
+    try {
+        const friends = await User.find({_id:{ $in: req.user.friends}})
+        const result = friends.map(item => ({ id: item._id, name: item.name, profilePic: item.profilePic }));
+        res.send(result)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
 const profileController ={
     editeUser,
-    upload
+    upload,
+    profile,
+    getFriends
 } 
 
 export default profileController
