@@ -8,7 +8,7 @@ const router = new express.Router();
 
 router.get('/register',UserController.upload.single('profilePic'),UserController.registerUser);
 router.get('/login',UserController.loginUser)
-router.get('/edit',verifytoken,profileController.upload.single('profilePic'),verifytoken,profileController.editeUser)
+router.get('/edit',profileController.upload.single('profilePic'),verifytoken,profileController.editeUser)
 router.get('/profile',verifytoken,profileController.profile)
 router.get('/search',peopleController.searchUser)
 router.get('/add',verifytoken,peopleController.addFriend)
