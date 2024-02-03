@@ -46,5 +46,5 @@ const profileController ={
     profile,
     getFriends
 } 
-
+ 
 export default profileController

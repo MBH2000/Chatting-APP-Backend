@@ -11,8 +11,6 @@ import socketController from './Socket.io/controllers/socket-controllers.js'
 import message from './Socket.io/Messages/Messages-controllers.js';
 dotenv.config();
 
-// mongoose.connect(process.env.DB_URL) .then(() => console.log('Connected!'));
-
 const app = express();
 const server = http.createServer(app);
 
