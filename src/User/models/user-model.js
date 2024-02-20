@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
         minlength:12
     },
     profilePic:{
-        type:Buffer,
+        type:String,
     },
     createdAt:{
         type:Date,
@@ -49,17 +49,18 @@ UserSchema.methods.GenerateToken = async function(){
     return token
 }
 
-UserSchema.statics.Loginuser = async function(email,password){
-const user = await User.findOne({email})
-if(!email){
-    throw new Error('Unable to Login')
+UserSchema.statics.Loginuser = async function(email, password) {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error('Email not found');
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error('Incorrect password');
+    }
+    return user;
 }
-const isMatch = await bcrypt.compare( password , user.password)
-if(!isMatch){
-    throw new Error('Unable to Login')
-}
-return user
-}
+
 
 UserSchema.pre('save',async function (next){
     const user = this 

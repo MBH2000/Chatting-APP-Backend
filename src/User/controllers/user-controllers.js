@@ -1,13 +1,18 @@
 import User from '../models/user-model.js';
-import multer from 'multer'
-
-const storage = multer.memoryStorage()
-const upload = multer({storage:storage})
+import cloudinaryController from '../../utils/cloudinary.js';
 
 async function registerUser(req,res){
     const user = new User(req.body)
+    console.log(req.body);
     if(req.file)
-    {user.profilePic = req.file.buffer}
+    {   
+        const imageName = new Date().getTime().toString()
+        const uploadResult = await cloudinaryController.uploadImage(req.file.buffer,imageName)
+        const uploadedUrl = uploadResult.url
+        console.log(uploadedUrl)
+        user.profilePic=uploadedUrl
+    }
+
     try {
         await user.save()
         const token = await user.GenerateToken()
@@ -17,20 +22,32 @@ async function registerUser(req,res){
     }
 }
 
-async function loginUser(req,res){
+async function loginUser(req, res) {
     try {
-        const user = await User.Loginuser(req.body.email,req.body.password)
-        const token = await user.GenerateToken()
-        res.status(200).send({user,token})
+        const user = await User.Loginuser(req.body.email, req.body.password);
+        const token = await user.GenerateToken();
+        res.status(200).send({ user, token });
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({ error: error.message });
     }
 }
+
+async function logout(req,res) {
+    try {
+        const user = await User.findById(req.user._id)
+        user.token = null
+        await user.save()
+        res.status(200).send({message:'Logout successful'})
+    } catch (error) {
+        res.status(500).send({error:error.message})
+    }
+}
+
 
 const UserController ={
     registerUser,
     loginUser,
-    upload
+    logout
 }
 
 export default UserController
