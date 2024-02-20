@@ -3,13 +3,11 @@ import cloudinaryController from '../../utils/cloudinary.js';
 
 async function registerUser(req,res){
     const user = new User(req.body)
-    console.log(req.body);
     if(req.file)
     {   
         const imageName = new Date().getTime().toString()
         const uploadResult = await cloudinaryController.uploadImage(req.file.buffer,imageName)
         const uploadedUrl = uploadResult.url
-        console.log(uploadedUrl)
         user.profilePic=uploadedUrl
     }
 
