@@ -1,20 +1,24 @@
 import multer from 'multer';
 import User from "../models/user-model.js"
+import cloudinaryController from '../../utils/cloudinary.js';
+
 
 const storage = multer.memoryStorage()
-const upload = multer({storage:storage})
 
 async function editeUser(req,res){
     const update = Object.keys(req.body)
-    console.log(update);
     const allowedUpdates = ['name','email','password','profilePic']
     const isValid = update.every((update)=>allowedUpdates.includes(update))
     if(!isValid){
         return res.status(400).send({error:'Invalid updates'})
     }
 
-    if(req.file){
-        req.user.profilePic = req.file.buffer;
+    if(req.file)
+    {   
+        const imageName = new Date().getTime().toString()
+        const uploadResult = await cloudinaryController.uploadImage(req.file.buffer,imageName)
+        const uploadedUrl = uploadResult.url
+        req.user.profilePic=uploadedUrl
     }
 
     try {
@@ -42,7 +46,6 @@ async function getFriends(req,res){
 
 const profileController ={
     editeUser,
-    upload,
     profile,
     getFriends
 } 

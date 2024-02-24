@@ -36,8 +36,14 @@ const UserSchema = new mongoose.Schema({
         type:Array,
         default:[]
     },
-    token:{
-        type:String,
+    token:String,
+    requests:{
+        type:Array,
+        default:[]
+    },
+    pending:{
+        type:Array,
+        default:[]
     }
 })
 

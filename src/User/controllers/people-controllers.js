@@ -27,13 +27,13 @@ async function getuserinfo(req,res){
 }
 
 async function addFriend(req,res){
-    console.log(req.body._id);
     try {
         const friend = await User.findById(req.body._id)
-        req.user.friends.push(friend._id)
+        req.user.pending.push(friend._id)
+        friend.requests.push(req.user._id)
         await req.user.save()
-        res.status(200).send('Friend Added')
-        console.log(req.user,req._id);
+        await friend.save()
+        res.status(200).send('Friend Request send')
 
     } catch (error) {
         res.status(500).send(error)
@@ -44,18 +44,55 @@ async function deleteFriend(req,res){
     try {
         const friend = await User.findById(req.body._id)
         req.user.friends.pull(friend._id)
+        friend.friends.pull(req.user._id)
         await req.user.save()
+        await friend.save()
         res.status(200).send('Friend Deleted')
     }catch(error){
         res.status(500).send(error)
     }
 }
 
+async function accept(req,res){
+    try {
+        const friend = await User.findById(req.body._id)
+        req.user.friends.push(friend._id)
+        req.user.requests.pull(friend._id)
+        friend.friends.push(req.user._id)
+        friend.pending.pull(req.user._id)
+        await req.user.save()
+        await friend.save()
+
+        res.status(200).send('Friend Added')
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+async function reject(req,res){
+    try {
+        const friend = await User.findById(req.body._id)
+        req.user.requests.pull(friend._id)
+        friend.pending.pull(req.user._id)
+        await req.user.save()
+        await friend.save()
+
+        res.status(200).send('Request Rejected')
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+
 const peopleController ={
     searchUser,
     addFriend,
     getuserinfo,
-    deleteFriend
+    deleteFriend,
+    accept,
+    reject
 }
 export default peopleController
 
