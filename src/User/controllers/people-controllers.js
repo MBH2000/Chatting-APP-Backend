@@ -85,7 +85,7 @@ async function reject(req,res){
     }
 }
 
-
+//test
 const peopleController ={
     searchUser,
     addFriend,
