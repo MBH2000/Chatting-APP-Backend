@@ -41,7 +41,6 @@ async function logout(req,res) {
     }
 }
 
-
 const UserController ={
     registerUser,
     loginUser,

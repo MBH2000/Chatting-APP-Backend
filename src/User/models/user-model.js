@@ -67,7 +67,6 @@ UserSchema.statics.Loginuser = async function(email, password) {
     return user;
 }
 
-
 UserSchema.pre('save',async function (next){
     const user = this 
     if(user.isModified('password')){

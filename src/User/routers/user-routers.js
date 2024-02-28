@@ -19,7 +19,7 @@ router.post('/profile',verifytoken,profileController.profile)
 
 router.post('/friends',verifytoken,profileController.getFriends)
 
-router.post('/search',peopleController.searchUser)
+router.post('/search',verifytoken,peopleController.searchUser)
 
 router.post('/info',peopleController.getuserinfo)
 
